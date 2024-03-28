@@ -20,6 +20,29 @@ const AuthForm = () => {
     const enteredPassword = passwordInputRef.current.value;
 
     if (isLogin) {
+      const resp = await fetch(
+        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBVJECc_XtkM-R9D52Lrqc7aKZD7jzRZt0",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            email: enteredEmail,
+            password: enteredPassword,
+            returnSecureToken: true,
+          }),
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      if (resp.ok) {
+        const respData = await resp.json();
+
+        console.log("ID TOKEN: ", respData.idToken);
+        alert("You are logged in");
+      } else {
+        const errorData = await resp.json();
+        console.error("Failed to Login:", errorData.error.message);
+        alert(errorData.error.message);
+      }
     } else {
       const resp = await fetch(
         "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBVJECc_XtkM-R9D52Lrqc7aKZD7jzRZt0",
@@ -28,23 +51,22 @@ const AuthForm = () => {
           body: JSON.stringify({
             email: enteredEmail,
             password: enteredPassword,
-            returnSecureToken: true
+            returnSecureToken: true,
           }),
           headers: { "Content-Type": "application/json" },
         }
       );
 
-      if(resp.ok){
-          console.log('user added');
-      }else{
+      if (resp.ok) {
+        console.log("user added");
+      } else {
         const errorData = await resp.json();
         console.error("Failed to add user:", errorData.error.message);
-        alert(errorData.error.message)
+        alert(errorData.error.message);
       }
     }
 
     setisLoading(false);
-
   };
 
   return (
@@ -65,7 +87,13 @@ const AuthForm = () => {
           />
         </div>
         <div className={classes.actions}>
-          {isLoading ? <p style={{color: "white"}}>Sending request...</p> : <button type="submit">{isLogin ? "Login" : "Create Account"}</button>}
+          {isLoading ? (
+            <p style={{ color: "white" }}>Sending request...</p>
+          ) : (
+            <button type="submit">
+              {isLogin ? "Login" : "Create Account"}
+            </button>
+          )}
           <button
             type="button"
             className={classes.toggle}

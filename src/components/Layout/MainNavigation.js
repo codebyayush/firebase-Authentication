@@ -1,25 +1,39 @@
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
-import classes from './MainNavigation.module.css';
+import classes from "./MainNavigation.module.css";
+import { useContext } from "react";
+import AuthCtx from "../../Store/AuthCtx";
 
 const MainNavigation = () => {
+  const ctx = useContext(AuthCtx);
+
+  const logoutHandler = () => {
+    ctx.logout();
+    console.log("token deleted.");
+  };
+
   return (
     <header className={classes.header}>
-      <Link to='/'>
+      <Link to="/">
         <div className={classes.logo}>React Auth</div>
       </Link>
       <nav>
-        <ul>
-          <li>
-            <Link to='/auth'>Login</Link>
-          </li>
-          <li>
-            <Link to='/profile'>Profile</Link>
-          </li>
-          <li>
-            <button>Logout</button>
-          </li>
-        </ul>
+        {ctx.isLoggedIn ? (
+          <ul>
+            <li>
+              <Link to="/profile">Profile</Link>
+            </li>
+            <li>
+              <button onClick={logoutHandler}>Logout</button>
+            </li>
+          </ul>
+        ) : (
+          <ul>
+            <li>
+              <Link to="/auth">Login</Link>
+            </li>
+          </ul>
+        )}
       </nav>
     </header>
   );

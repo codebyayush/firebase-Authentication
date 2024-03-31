@@ -6,6 +6,7 @@ import AuthPage from "./pages/AuthPage";
 import HomePage from "./pages/HomePage";
 import { useContext } from "react";
 import AuthCtx from "./Store/AuthCtx";
+import { Redirect } from "react-router-dom/cjs/react-router-dom.min";
 
 function App() {
   const ctx = useContext(AuthCtx);
@@ -19,6 +20,8 @@ function App() {
         ) : (
           <Route path="/auth" exact component={AuthPage} />
         )}
+      <Route path="*" component={Redirect}/>
+      
     </Switch>
     </Layout>
   );
